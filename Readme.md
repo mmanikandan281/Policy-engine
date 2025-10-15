@@ -51,8 +51,8 @@ psql -h localhost -U postgres -c "CREATE DATABASE jitengine;"
 ```
 2) Environment (PowerShell)
 ```powershell
-$env:DATABASE_URL = "postgres://postgres:postgres@localhost:5432/jitengine?sslmode=disable"
-$env:FAIL_CLOSED = "true"
+DATABASE_URL = "postgres://postgres:postgres@localhost:5432/jitengine?sslmode=disable"
+FAIL_CLOSED = "true"
 ```
 3) Migrate
 ```powershell
@@ -153,6 +153,6 @@ curl -i -X POST http://localhost:8080/evaluate -H "Content-Type: application/jso
   "metadata": {}
 }'
 ```
-
+# Developed By Manikandan M
 
  
