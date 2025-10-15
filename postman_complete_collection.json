@@ -1,0 +1,288 @@
+{
+  "info": {
+    "name": "Global JIT Policy Engine - Complete Collection",
+    "_postman_id": "global-jit-complete-1234567890ab",
+    "description": "Complete JIT Policy Engine collection with two-layer evaluation: global policies first (deny early), then provider-specific policies. Uses provider query parameter for policy creation/update.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AWS Policies",
+      "item": [
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=aws", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "aws" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"AWS S3 Analyst Read Access\",\n  \"effect\": \"allow\",\n  \"resource\": \"s3:bucket/analyst-data/*\",\n  \"actions\": [\"s3:GetObject\", \"s3:ListBucket\"],\n  \"expr\": \"subject.group == 'analyst' && cloud == 'aws'\",\n  \"metadata\": {\"owner\": \"secops\", \"message\": \"S3 read access granted for analysts.\"},\n  \"enabled\": true,\n  \"priority\": 100\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}?provider=aws", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"], "query": [{ "key": "provider", "value": "aws" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated AWS Policy Name\",\n  \"effect\": \"allow\",\n  \"resource\": \"s3:bucket/bucket123/*\",\n  \"actions\": [\"s3:GetObject\"],\n  \"expr\": \"subject.group == 'analyst'\",\n  \"metadata\": {\"owner\": \"secops\"},\n  \"enabled\": true,\n  \"priority\": 90\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GCP Policies",
+      "item": [
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=gcp", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "gcp" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"GCP Storage Analyst Access\",\n  \"effect\": \"allow\",\n  \"resource\": \"storage:bucket/analyst-*\",\n  \"actions\": [\"storage.objects.get\", \"storage.objects.list\"],\n  \"expr\": \"subject.group == 'analyst' && cloud == 'gcp'\",\n  \"metadata\": {\"owner\": \"data\", \"message\": \"GCS read access for analysts.\"},\n  \"enabled\": true,\n  \"priority\": 100\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}?provider=gcp", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"], "query": [{ "key": "provider", "value": "gcp" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated GCP Policy Name\",\n  \"effect\": \"allow\",\n  \"resource\": \"storage:bucket/bucket123/*\",\n  \"actions\": [\"storage.objects.get\"],\n  \"expr\": \"subject.group == 'analyst'\",\n  \"metadata\": {\"owner\": \"data\"},\n  \"enabled\": true,\n  \"priority\": 90\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Database Policies",
+      "item": [
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=database", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "database" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Oracle DBA Full Access\",\n  \"effect\": \"allow\",\n  \"resource\": \"oracle:instance/prod-*\",\n  \"actions\": [\"connect\", \"select\", \"insert\", \"update\", \"delete\", \"create\", \"drop\"],\n  \"expr\": \"subject.role == 'dba'\",\n  \"metadata\": {\"owner\": \"database\", \"message\": \"Full Oracle DBA access.\"},\n  \"enabled\": true,\n  \"priority\": 70\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}?provider=database", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"], "query": [{ "key": "provider", "value": "database" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Database Policy Name\",\n  \"effect\": \"allow\",\n  \"resource\": \"oracle:instance/prod-*\",\n  \"actions\": [\"connect\", \"select\"],\n  \"expr\": \"subject.role == 'dba'\",\n  \"metadata\": {\"owner\": \"database\"},\n  \"enabled\": true,\n  \"priority\": 70\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SSH Policies",
+      "item": [
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=ssh", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "ssh" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"SSH Admin Full Access\",\n  \"effect\": \"allow\",\n  \"resource\": \"unix:host/*\",\n  \"actions\": [\"connect\"],\n  \"expr\": \"subject.role == 'admin' && protocol == 'ssh' && platform == 'unix'\",\n  \"metadata\": {\"owner\": \"security\", \"message\": \"SSH access for admins.\"},\n  \"enabled\": true,\n  \"priority\": 50\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}?provider=ssh", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"], "query": [{ "key": "provider", "value": "ssh" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated SSH Policy Name\",\n  \"effect\": \"allow\",\n  \"resource\": \"unix:host/*\",\n  \"actions\": [\"connect\"],\n  \"expr\": \"subject.role == 'admin'\",\n  \"metadata\": {\"owner\": \"security\"},\n  \"enabled\": true,\n  \"priority\": 50\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "RDP Policies",
+      "item": [
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=rdp", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "rdp" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"RDP Admin Full Access\",\n  \"effect\": \"allow\",\n  \"resource\": \"windows:host/*\",\n  \"actions\": [\"connect\"],\n  \"expr\": \"subject.role == 'admin' && protocol == 'rdp' && platform == 'windows'\",\n  \"metadata\": {\"owner\": \"security\", \"message\": \"RDP access for admins.\"},\n  \"enabled\": true,\n  \"priority\": 50\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}?provider=rdp", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"], "query": [{ "key": "provider", "value": "rdp" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated RDP Policy Name\",\n  \"effect\": \"allow\",\n  \"resource\": \"windows:host/*\",\n  \"actions\": [\"connect\"],\n  \"expr\": \"subject.role == 'admin'\",\n  \"metadata\": {\"owner\": \"security\"},\n  \"enabled\": true,\n  \"priority\": 50\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Global Policies",
+      "item": [
+        {
+          "name": "Create Global Deny Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=global", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "global" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Global Context Enforcement\",\n  \"effect\": \"deny\",\n  \"resource\": \"*\",\n  \"actions\": null,\n  \"expr\": \"!subject.device.compliant || subject.geo.country not in ['IN','US','SG'] || subject.justification.ticket_id == '' || subject.session.active_sessions > 0\",\n  \"metadata\": {\"owner\": \"security\", \"message\": \"Access denied due to global context violation.\"},\n  \"enabled\": true,\n  \"priority\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Global Allow Policy",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/policies?provider=global", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"], "query": [{ "key": "provider", "value": "global" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Global Emergency Access\",\n  \"effect\": \"allow\",\n  \"resource\": \"*\",\n  \"actions\": null,\n  \"expr\": \"subject.emergency == true\",\n  \"metadata\": {\"owner\": \"security\", \"message\": \"Emergency access granted.\"},\n  \"enabled\": true,\n  \"priority\": 5\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD Operations",
+      "item": [
+        {
+          "name": "List All Policies",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8080/policies", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies"] }
+          }
+        },
+        {
+          "name": "Get Policy by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Policy",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "http://localhost:8080/policies/{{policy_id}}", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["policies", "{{policy_id}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Policy Evaluation",
+      "item": [
+        {
+          "name": "Evaluate AWS S3 Request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/evaluate", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["evaluate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": {\"group\": \"analyst\", \"device\": {\"compliant\": true}, \"geo\": {\"country\": \"US\"}, \"justification\": {\"ticket_id\": \"TICKET-123\"}, \"session\": {\"active_sessions\": 0}},\n  \"resource\": \"s3:bucket/analyst-data/*\",\n  \"action\": \"s3:GetObject\",\n  \"cloud\": \"aws\",\n  \"metadata\": {}\n}"
+            }
+          }
+        },
+        {
+          "name": "Evaluate AWS EC2 Request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/evaluate", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["evaluate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": {\"team\": \"dev\", \"device\": {\"compliant\": true}, \"geo\": {\"country\": \"US\"}, \"justification\": {\"ticket_id\": \"TICKET-456\"}, \"session\": {\"active_sessions\": 0}},\n  \"resource\": \"cloud:aws:ec2/i-123456\",\n  \"action\": \"connect\",\n  \"protocol\": \"\",\n  \"platform\": \"\",\n  \"cloud\": \"aws\",\n  \"metadata\": {}\n}"
+            }
+          }
+        },
+        {
+          "name": "Evaluate SSH Request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/evaluate", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["evaluate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": {\"role\": \"admin\", \"device\": {\"compliant\": true}, \"geo\": {\"country\": \"US\"}, \"justification\": {\"ticket_id\": \"TICKET-789\"}, \"session\": {\"active_sessions\": 0}},\n  \"resource\": \"ssh:unix:host/example.com\",\n  \"action\": \"connect\",\n  \"protocol\": \"ssh\",\n  \"platform\": \"unix\",\n  \"metadata\": {}\n}"
+            }
+          }
+        },
+        {
+          "name": "Evaluate RDP Request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/evaluate", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["evaluate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": {\"role\": \"user\", \"device\": {\"compliant\": true}, \"geo\": {\"country\": \"US\"}, \"justification\": {\"ticket_id\": \"TICKET-101\"}, \"session\": {\"active_sessions\": 0}},\n  \"resource\": \"rdp:windows:host/192.168.1.1\",\n  \"action\": \"connect\",\n  \"protocol\": \"rdp\",\n  \"platform\": \"windows\",\n  \"metadata\": {}\n}"
+            }
+          }
+        },
+        {
+          "name": "Evaluate Database Request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/evaluate", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["evaluate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": {\"role\": \"dba\"},\n  \"resource\": \"db:oracle:instance/prod-db\",\n  \"action\": \"connect\",\n  \"metadata\": {}\n}"
+            }
+          }
+        },
+        {
+          "name": "Evaluate GCP Storage Request",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:8080/evaluate", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["evaluate"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": {\"group\": \"analyst\"},\n  \"resource\": \"storage:bucket/analyst-data/file.txt\",\n  \"action\": \"storage.objects.get\",\n  \"cloud\": \"gcp\",\n  \"metadata\": {}\n}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [{ "key": "policy_id", "value": "" }]
+}
