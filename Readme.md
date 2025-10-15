@@ -46,7 +46,6 @@ Requirements: Go 1.22+, Postgres 14+
 
 1) Start Postgres and DB
 ```bash
-docker run --name jit-pg -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:14
 psql -h localhost -U postgres -c "CREATE DATABASE jitengine;"
 ```
 2) Environment (PowerShell)
